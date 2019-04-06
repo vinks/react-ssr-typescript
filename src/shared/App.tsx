@@ -1,24 +1,25 @@
-// @flow
-import * as React from 'react';
+import React, { MouseEvent } from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
-import { withTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { setLocale } from './store/app/actions';
 import { ReactComponent as ReactLogo } from './assets/react.svg';
 import Features from './components/Features';
 import css from './App.module.css';
 
-type PropsT = {
-    setLocale: (string) => {},
-    t: (string) => string,
-};
+interface AppT {
+    locale: string;
+}
 
-const App = (props: PropsT) => {
-    const setLanguage = React.useCallback((e: SyntheticInputEvent<HTMLButtonElement>) => {
-        props.setLocale(e.target.value);
+interface PropsT {
+    setLocale: typeof setLocale;
+}
+
+function App(props: PropsT) {
+    const [t] = useTranslation();
+    const setLanguage = React.useCallback((e: MouseEvent<HTMLButtonElement>) => {
+        props.setLocale(e.currentTarget.value);
     }, []);
-
-    const { t } = props;
     return (
         <div className={css.wrapper}>
             <Helmet defaultTitle="React SSR Starter" titleTemplate="%s – React SSR Starter" />
@@ -40,7 +41,7 @@ const App = (props: PropsT) => {
             </p>
         </div>
     );
-};
+}
 
 const mapDispatchToProps = {
     setLocale,
@@ -49,4 +50,4 @@ const mapDispatchToProps = {
 export default connect(
     null,
     mapDispatchToProps
-)(withTranslation()(App));
+)(App);

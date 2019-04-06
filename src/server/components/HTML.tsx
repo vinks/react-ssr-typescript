@@ -3,12 +3,12 @@
 import React from 'react';
 import Helmet from 'react-helmet';
 
-type PropsT = {
-    children: any,
-    css: string[],
-    scripts: string[],
-    state: string,
-};
+interface PropsT {
+    children: string;
+    css: string[];
+    scripts: string[];
+    state: string;
+}
 
 export default class HTML extends React.Component<PropsT> {
     static defaultProps = {

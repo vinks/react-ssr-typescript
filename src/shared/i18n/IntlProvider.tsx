@@ -1,4 +1,4 @@
-// @flow
+/* eslint-disable @typescript-eslint/camelcase */
 import React from 'react';
 import i18next from 'i18next';
 import { withRouter } from 'react-router-dom';
@@ -6,18 +6,19 @@ import { I18nextProvider } from 'react-i18next';
 import { connect } from 'react-redux';
 import { getLocale } from '../store/app/selectors';
 
-/* eslint-disable camelcase */
 import de_DE from './locales/de_DE.json';
 import en_US from './locales/en_US.json';
-/* eslint-enable camelcase */
+import { LocaleState, AppState, LocaleAction } from '../store/app/types';
+
+const resources = {
+    de_DE,
+    en_US,
+};
 
 i18next.init({
     fallbackLng: 'en_US',
     fallbackNS: ['translation'],
-    resources: {
-        de_DE,
-        en_US,
-    },
+    resources,
     parseMissingKeyHandler: (missing) => {
         if (process.env.NODE_ENV === 'development') {
             console.warn('MISSING TRANSLATION:', missing);
@@ -28,17 +29,16 @@ i18next.init({
 
 i18next.languages = ['de_DE', 'en_US'];
 
-type PropsT = {
-    children: any,
-    locale: 'en_US' | 'de_DE',
-};
+interface StateFromProps {
+    locale: string;
+}
 
-class I18N extends React.PureComponent<PropsT> {
+class I18N extends React.PureComponent<StateFromProps> {
     componentDidMount() {
         i18next.changeLanguage(this.props.locale);
     }
 
-    componentDidUpdate(prevProps) {
+    componentDidUpdate(prevProps: StateFromProps) {
         const { locale: newLocale } = this.props;
         const { locale: oldLocale } = prevProps;
 
@@ -52,15 +52,16 @@ class I18N extends React.PureComponent<PropsT> {
     }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: AppState) => ({
     locale: getLocale(state),
 });
 
 export default withRouter(
-    connect(
+    connect<StateFromProps, void, void>(
         mapStateToProps,
         null,
         null,
         { pure: false }
     )(I18N)
 );
+/* eslint-enable @typescript-eslint/camelcase */

@@ -13,7 +13,7 @@ module.exports = {
         bundle: [
             require.resolve('core-js/stable'),
             require.resolve('regenerator-runtime/runtime'),
-            `${paths.srcClient}/index.js`,
+            `${paths.srcClient}/index`,
         ],
     },
     output: {

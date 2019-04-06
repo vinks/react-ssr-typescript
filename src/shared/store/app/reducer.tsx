@@ -1,13 +1,13 @@
 // @flow
 import { produce } from 'immer';
-import type { ActionT, AppT } from './types';
 import { ActionTypes } from './actions';
+import { LocaleState, LocaleAction } from './types';
 
-export const initialState: AppT = Object.freeze({
+export const initialState: LocaleState = Object.freeze({
     locale: 'en_US',
 });
 
-export default (state: AppT = initialState, action: ActionT): AppT =>
+export default (state = initialState, action: LocaleAction) =>
     produce(state, (draft) => {
         const { type, payload } = action;
 

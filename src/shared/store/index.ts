@@ -1,15 +1,18 @@
 import thunk from 'redux-thunk';
-import { createStore, applyMiddleware, compose } from 'redux';
+import { createStore, applyMiddleware, Store } from 'redux';
+import { composeWithDevTools } from 'redux-devtools-extension/logOnlyInProduction';
 import rootReducer from './rootReducer';
 
-export const configureStore = ({ initialState, middleware = [] } = {}) => {
-    const devtools =
-        typeof window !== 'undefined' &&
-        typeof window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ === 'function' &&
-        window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({ actionsBlacklist: [] });
+interface StoreConfig {
+    initialState: Record<string, any>;
+    middleware: any;
+}
 
-    const composeEnhancers = devtools || compose;
-
+export function configureStore(config: StoreConfig = { initialState: {}, middleware: [] }): Store {
+    const { initialState, middleware } = config;
+    const composeEnhancers = composeWithDevTools({
+        actionsBlacklist: [],
+    });
     const store = createStore(
         rootReducer,
         initialState,
@@ -25,6 +28,6 @@ export const configureStore = ({ initialState, middleware = [] } = {}) => {
     }
 
     return store;
-};
+}
 
 export default configureStore;

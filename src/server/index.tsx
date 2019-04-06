@@ -1,5 +1,5 @@
 // import React from 'react';
-import express from 'express';
+import express, { ErrorRequestHandler } from 'express';
 import cors from 'cors';
 import path from 'path';
 import chalk from 'chalk';
@@ -18,7 +18,7 @@ const app = express();
 // lines to use the express.static middleware to serve assets for production (not recommended!)
 if (process.env.NODE_ENV === 'development') {
     app.use(paths.publicPath, express.static(path.join(paths.clientBuild, paths.publicPath)));
-    app.use('/favicon.ico', (req, res) => {
+    app.use('/favicon.ico', (_, res) => {
         res.send('');
     });
 }
@@ -27,7 +27,7 @@ app.use(cors());
 
 app.use(bodyParser.json());
 
-app.use((req, res, next) => {
+app.use((req, _, next) => {
     req.store = configureStore();
     return next();
 });
@@ -43,7 +43,7 @@ app.use(
 app.use(serverRender());
 
 // eslint-disable-next-line no-unused-vars
-app.use((err, req, res, next) => {
+const errorHandler: ErrorRequestHandler = (err, _, res) => {
     return res.status(404).json({
         status: 'error',
         message: err.message,
@@ -52,9 +52,9 @@ app.use((err, req, res, next) => {
             process.env.NODE_ENV === 'development' &&
             (err.stack || '')
                 .split('\n')
-                .map((line) => line.trim())
-                .map((line) => line.split(path.sep).join('/'))
-                .map((line) =>
+                .map((line: string) => line.trim())
+                .map((line: string) => line.split(path.sep).join('/'))
+                .map((line: string) =>
                     line.replace(
                         process
                             .cwd()
@@ -64,7 +64,8 @@ app.use((err, req, res, next) => {
                     )
                 ),
     });
-});
+};
+app.use(errorHandler);
 
 app.listen(process.env.PORT || 8500, () => {
     console.log(

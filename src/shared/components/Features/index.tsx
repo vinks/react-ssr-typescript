@@ -3,9 +3,9 @@ import * as React from 'react';
 import { withTranslation } from 'react-i18next';
 import css from './Features.module.css';
 
-type PropsT = {
-    t: (string) => string,
-};
+interface PropsT {
+    t: (string) => string;
+}
 
 const Features = ({ t }: PropsT) => (
     <>
