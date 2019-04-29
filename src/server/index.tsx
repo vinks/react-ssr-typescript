@@ -9,6 +9,8 @@ import bodyParser from 'body-parser';
 import { configureStore } from '../shared/store';
 import serverRender from './render';
 import paths from '../../config/paths';
+import { matchPath } from 'react-router-dom';
+import routes from '../shared/routes';
 
 require('dotenv').config();
 
@@ -30,6 +32,18 @@ app.use(bodyParser.json());
 app.use((req, _, next) => {
     req.store = configureStore();
     return next();
+});
+
+app.get('/*', (req, _, next) => {
+    const dataRequirements = routes
+        .filter((route) => matchPath(req.url, route)) // filter matching paths
+        .map((route) => route.component) // map to components
+        .filter((comp) => comp.serverFetch) // check if components have data requirement
+        .map((comp) => req.store.dispatch(comp.serverFetch())); // dispatch data requirement
+
+    Promise.all(dataRequirements).then(() => {
+        return next();
+    });
 });
 
 const manifestPath = path.join(paths.clientBuild, paths.publicPath);

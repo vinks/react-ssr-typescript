@@ -3,13 +3,11 @@ import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { setLocale } from './store/app/actions';
+import { NavLink, Switch, Route } from 'react-router-dom';
+import routes from '../shared/routes';
 import { ReactComponent as ReactLogo } from './assets/react.svg';
 import Features from './components/Features';
 import css from './App.module.css';
-
-interface AppT {
-    locale: string;
-}
 
 interface PropsT {
     setLocale: typeof setLocale;
@@ -22,6 +20,17 @@ function App(props: PropsT) {
     }, []);
     return (
         <div className={css.wrapper}>
+            <nav>
+                <NavLink to="/page1">Page 1</NavLink>
+                <NavLink to="/page2">Page 2</NavLink>
+            </nav>
+
+            <Switch>
+                {routes.map((route) => (
+                    <Route key={route.path} {...route} />
+                ))}
+            </Switch>
+
             <Helmet defaultTitle="React SSR Starter" titleTemplate="%s – React SSR Starter" />
 
             <h1>

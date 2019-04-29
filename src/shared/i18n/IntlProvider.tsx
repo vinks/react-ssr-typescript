@@ -8,7 +8,7 @@ import { getLocale } from '../store/app/selectors';
 
 import de_DE from './locales/de_DE.json';
 import en_US from './locales/en_US.json';
-import { LocaleState, AppState, LocaleAction } from '../store/app/types';
+import { AppState } from '../store/app/types';
 
 const resources = {
     de_DE,

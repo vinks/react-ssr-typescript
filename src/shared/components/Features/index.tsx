@@ -4,7 +4,7 @@ import { withTranslation } from 'react-i18next';
 import css from './Features.module.css';
 
 interface PropsT {
-    t: (string) => string;
+    t: (string: string) => string;
 }
 
 const Features = ({ t }: PropsT) => (

@@ -10,9 +10,11 @@ interface StoreConfig {
 
 export function configureStore(config: StoreConfig = { initialState: {}, middleware: [] }): Store {
     const { initialState, middleware } = config;
+
     const composeEnhancers = composeWithDevTools({
         actionsBlacklist: [],
     });
+
     const store = createStore(
         rootReducer,
         initialState,
